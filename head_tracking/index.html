@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="js/headtrack.js"></script>
+    <title></title>
+    <style>
+        .mainBg{
+            width: 100%;
+            height: 100%;
+            background-image: url('http://mama-beach.com/mama2/wp-content/uploads/2013/07/photodune-4088822-beauty-beach-and-limestone-rocks-l.jpg');
+            background-position: center;
+            position: absolute;
+        }
+    </style>
+</head>
+<body style="margin: 0;">
+<div class="mainBg">
+
+</div>
+<div class="head"></div>
+<canvas id="inputCanvas" width="320" height="240" style="display:none"></canvas>
+
+<script type="text/javascript">
+    var videoInput = document.getElementById('inputVideo');
+    var canvasInput = document.getElementById('inputCanvas');
+
+    //Init head tracking library
+    var htracker = new headtrackr.Tracker({ui : false});
+    htracker.init(videoInput, canvasInput);
+    htracker.start();
+</script>
+<script>
+    //Get inital values
+    var initialX = (parseInt($('.mainBg').css('background-position-x')));
+    var initialY = (parseInt($('.mainBg').css('background-position-y')));
+
+    function move(x,y,z){
+        //just make it a bit smoother
+        var scale = 220 - (z/1);
+
+        var element = $('.mainBg');
+
+        //set new values according to head movement
+        element .css('background-position-x', initialX - x + "%");
+        element .css('background-position-y', initialY + y + "%");
+        element .css('background-size', scale +"%");
+    }
+
+    document.addEventListener("headtrackingEvent", function( event ) {
+        // clear canvas
+        move(event.x, event.y, event.z);
+
+    });
+</script>
+</body>
+</html>
